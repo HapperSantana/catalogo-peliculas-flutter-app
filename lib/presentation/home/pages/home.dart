@@ -17,10 +17,38 @@ class HomePage extends StatelessWidget {
               fit: BoxFit.cover,
             )),
           ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.3),
+                  Colors.black.withOpacity(0.7),
+                  Colors.black.withOpacity(0.9),
+                  Colors.black.withOpacity(1),
+                ],
+              ),
+            ),
+          ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Container(
+                  width: 140,
+                  height: 140,
+                  decoration: BoxDecoration(
+                    color:
+                        Colors.white.withOpacity(0.8), // fondo semitransparente
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
                 const Text('Bienvenidos',
                     style: TextStyle(
                         fontSize: 52,

@@ -16,6 +16,10 @@ dependencies:
   provider: ^6.0.0
   flutter_bloc: 8.1.6
   reactive_button: ^0.0.9
+  dartz:
+  dio:
+  logger:
+  get_it:
 
 dev_dependencies:
   flutter_test:
