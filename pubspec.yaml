@@ -20,6 +20,7 @@ dependencies:
   dio:
   logger:
   get_it:
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:
