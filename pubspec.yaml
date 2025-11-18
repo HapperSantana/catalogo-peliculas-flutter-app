@@ -21,6 +21,8 @@ dependencies:
   logger:
   get_it:
   http: ^1.6.0
+  firebase_core: ^4.2.1
+  firebase_auth: ^6.1.2
 
 dev_dependencies:
   flutter_test:

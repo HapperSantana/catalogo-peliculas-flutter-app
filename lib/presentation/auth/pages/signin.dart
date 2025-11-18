@@ -1,12 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/common/helper/message/display_message.dart';
 import 'package:flutter_application/common/helper/navigation/app_navigation.dart';
 import 'package:flutter_application/core/configs/theme/app_colors.dart';
+import 'package:flutter_application/data/auth/models/signin_req_params.dart';
+import 'package:flutter_application/domain/auth/usecases/signin.dart';
 import 'package:flutter_application/presentation/auth/pages/signup.dart';
+import 'package:flutter_application/service_locator.dart';
 import 'package:reactive_button/reactive_button.dart';
 
 class SigninPage extends StatelessWidget {
-  const SigninPage({super.key});
+  SigninPage({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +36,7 @@ class SigninPage extends StatelessWidget {
                 SizedBox(
                   height: 60,
                 ),
-                _signinButton(),
+                _signinButton(context),
                 SizedBox(
                   height: 20,
                 ),
@@ -47,23 +54,28 @@ class SigninPage extends StatelessWidget {
 
   Widget _emailField() {
     return TextField(
-      decoration: InputDecoration(hintText: 'Email'),
+      controller: _emailController,
+      decoration: const InputDecoration(hintText: 'Email'),
     );
   }
 
   Widget _passwordField() {
     return TextField(
-      decoration: InputDecoration(hintText: 'Contraseña'),
+      controller: _passwordController,
+      decoration: const InputDecoration(hintText: 'Contraseña'),
     );
   }
 
-  Widget _signinButton() {
+  Widget _signinButton(BuildContext context) {
     return ReactiveButton(
         title: 'Ingresar',
         activeColor: AppColors.primary,
-        onPressed: () async {},
+        onPressed: () async => sl<SigninUseCase>().call(SigninReqParams(
+            email: _emailController.text, password: _passwordController.text)),
         onSuccess: () {},
-        onFailure: (error) {});
+        onFailure: (error) {
+          DisplayMessage.errorMessage(error, context);
+        });
   }
 
   Widget _signupText(BuildContext context) {
@@ -74,7 +86,7 @@ class SigninPage extends StatelessWidget {
           style: TextStyle(color: Colors.blue),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
-              AppNavigator.push(context, const SignupPage());
+              AppNavigator.push(context, SignupPage());
             })
     ]));
   }
