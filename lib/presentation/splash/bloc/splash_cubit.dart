@@ -1,4 +1,6 @@
+import 'package:flutter_application/domain/auth/usecases/is_logged_in.dart';
 import 'package:flutter_application/presentation/splash/bloc/splash_state.dart';
+import 'package:flutter_application/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SplashCubit extends Cubit<SplashState> {
@@ -6,6 +8,12 @@ class SplashCubit extends Cubit<SplashState> {
 
   void appStarted() async {
     await Future.delayed(const Duration(seconds: 2));
-    emit(UnAuthenticated()); //Authenticated());
+    await sl<IsLoggedInUseCase>().call(null).then((isLoggedIn) {
+      if (isLoggedIn) {
+        emit(Authenticated());
+      } else {
+        emit(UnAuthenticated());
+      }
+    });
   }
 }

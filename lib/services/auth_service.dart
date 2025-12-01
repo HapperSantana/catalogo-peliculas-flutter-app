@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/common/helper/navigation/app_navigation.dart';
+import 'package:flutter_application/presentation/auth/pages/signin.dart';
 
 ValueNotifier<AuthService> authService =
     ValueNotifier<AuthService>(AuthService());
@@ -24,8 +26,11 @@ class AuthService {
         email: email, password: password);
   }
 
-  Future<void> signOut() async {
-    return await firebaseAuth.signOut();
+  Future<void> signOut({required BuildContext context}) async {
+    await firebaseAuth.signOut();
+    await Future.delayed(Duration(seconds: 1));
+    // ignore: use_build_context_synchronously
+    AppNavigator.pushReplacement(context, SigninPage());
   }
 
   Future<void> resetPassword({required String email}) async {

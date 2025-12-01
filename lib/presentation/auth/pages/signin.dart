@@ -6,6 +6,7 @@ import 'package:flutter_application/core/configs/theme/app_colors.dart';
 import 'package:flutter_application/data/auth/models/signin_req_params.dart';
 import 'package:flutter_application/domain/auth/usecases/signin.dart';
 import 'package:flutter_application/presentation/auth/pages/signup.dart';
+import 'package:flutter_application/presentation/home/pages/home.dart';
 import 'package:flutter_application/service_locator.dart';
 import 'package:reactive_button/reactive_button.dart';
 
@@ -72,9 +73,12 @@ class SigninPage extends StatelessWidget {
         activeColor: AppColors.primary,
         onPressed: () async => sl<SigninUseCase>().call(SigninReqParams(
             email: _emailController.text, password: _passwordController.text)),
-        onSuccess: () {},
+        onSuccess: () {
+          AppNavigator.pushReplacement(context, const HomePage());
+        },
         onFailure: (error) {
           DisplayMessage.errorMessage(error, context);
+          //print("Error: $error");
         });
   }
 

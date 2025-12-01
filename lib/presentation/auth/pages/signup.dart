@@ -1,41 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/common/helper/message/display_message.dart';
 import 'package:flutter_application/common/helper/navigation/app_navigation.dart';
 import 'package:flutter_application/core/configs/theme/app_colors.dart';
+import 'package:flutter_application/data/auth/models/signup_req_params.dart';
+import 'package:flutter_application/domain/auth/usecases/signup.dart';
 import 'package:flutter_application/presentation/auth/pages/signin.dart';
-import 'package:flutter_application/services/auth_service.dart';
+import 'package:flutter_application/service_locator.dart';
 import 'package:reactive_button/reactive_button.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class SignupPage extends StatelessWidget {
+  SignupPage({super.key});
 
-  @override
-  State<SignupPage> createState() => _SignupPageState();
-}
-
-class _SignupPageState extends State<SignupPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  String errorMessage = '';
-
-  void register() async {
-    try {
-      await authService.value.createAccount(
-          email: _emailController.text, password: _passwordController.text);
-      popPage();
-    } on FirebaseAuthException catch (e) {
-      print(e.message);
-      setState(() {
-        errorMessage =
-            e.message ?? 'Ocurrio un error durante el registro del usuario.';
-      });
-    }
-  }
-
-  void popPage() {
-    Navigator.pop(context);
-  }
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +37,6 @@ class _SignupPageState extends State<SignupPage> {
                   height: 60,
                 ),
                 _signupButton(context),
-                SizedBox(
-                  height: 10,
-                ),
-                _errorText(context),
                 SizedBox(
                   height: 20,
                 ),
@@ -96,21 +70,19 @@ class _SignupPageState extends State<SignupPage> {
     return ReactiveButton(
         title: 'Registrar',
         activeColor: AppColors.primary,
-        onPressed: () async {
-          register();
-          return true;
-        },
+        onPressed: () async => sl<SignupUseCase>().call(SignupReqParams(
+            email: _emailController.text, password: _passwordController.text)),
         onSuccess: () {
-          AppNavigator.push(context, SigninPage());
+          AppNavigator.pushReplacement(context, SigninPage());
         },
         onFailure: (error) {
-          //DisplayMessage.errorMessage(error, context);
+          DisplayMessage.errorMessage(error, context);
         });
   }
 
   Widget _signinText(BuildContext context) {
     return Text.rich(TextSpan(children: [
-      TextSpan(text: "Ya tienes una cuenta ? "),
+      TextSpan(text: "Ya tienes una cuenta ?"),
       TextSpan(
           text: ' Iniciar Sesión',
           style: TextStyle(color: Colors.blue),
@@ -119,12 +91,5 @@ class _SignupPageState extends State<SignupPage> {
               AppNavigator.push(context, SigninPage());
             })
     ]));
-  }
-
-  Widget _errorText(BuildContext context) {
-    return Text(
-      errorMessage,
-      style: TextStyle(color: Colors.red),
-    );
   }
 }
